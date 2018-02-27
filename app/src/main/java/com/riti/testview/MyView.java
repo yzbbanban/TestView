@@ -32,6 +32,7 @@ public class MyView extends View {
     public static final int RIGHT = 3;
     public static final int BOTTOM = 4;
     private int gravity = CENTER;
+    private int bc;
 
     public MyView(Context context) {
         super(context);
@@ -49,21 +50,26 @@ public class MyView extends View {
     public MyView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
-        TypedArray typedArray=context.obtainStyledAttributes(attrs,R.styleable.MyView);
-        backgroundColor=typedArray.getColor(R.styleable.MyView_percent_background_color,Color.GRAY);
-        gravity=typedArray.getInt(R.styleable.MyView_percent_circle_gravity,CENTER);
-        progress=typedArray.getInt(R.styleable.MyView_percent_circle_progress,0);
-        progressColor=typedArray.getColor(R.styleable.MyView_percent_progress_color,Color.YELLOW);
-        radius=typedArray.getDimension(R.styleable.MyView_percent_circle_radius,0.0f);
-
-
-
-
+        initParams(context, attrs);
     }
 
     public MyView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
+        initParams(context, attrs);
+    }
+
+    private void initParams(Context context, AttributeSet attrs) {
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.MyView);
+        if (typedArray != null) {
+            backgroundColor = typedArray.getColor(R.styleable.MyView_percent_background_color, Color.GRAY);
+            gravity = typedArray.getInt(R.styleable.MyView_percent_circle_gravity, CENTER);
+            progress = typedArray.getInt(R.styleable.MyView_percent_circle_progress, 0);
+            progressColor = typedArray.getColor(R.styleable.MyView_percent_progress_color, Color.YELLOW);
+            radius = typedArray.getDimension(R.styleable.MyView_percent_circle_radius, 0.0f);
+        }
+
+
     }
 
     @Override
@@ -89,6 +95,32 @@ public class MyView extends View {
         Log.e(TAG, "onMeasure--widthSize-->" + widthSize);
         Log.e(TAG, "onMeasure--heightMode-->" + heightMode);
         Log.e(TAG, "onMeasure--heightSize-->" + heightSize);
+
+        int width = getWidth();
+        int height = getHeight();
+        centerX = width / 2;
+        centerY = height / 2;
+        switch (gravity) {
+            case LEFT:
+                centerX=radius+getPaddingLeft();
+                break;
+            case TOP:
+                centerY=radius+getPaddingTop();
+                break;
+            case RIGHT:
+                centerX=width-radius-getPaddingRight();
+                break;
+            case BOTTOM:
+                centerY=height-radius-getPaddingBottom();
+                break;
+
+        }
+        float left=centerX-radius;
+        float top=centerY-radius;
+        float right=centerX+radius;
+        float bottom=centerY+radius;
+        rectF.set(left,top,right,bottom);
+
     }
 
     @Override
@@ -100,24 +132,34 @@ public class MyView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mPaint.setColor(Color.YELLOW);
+//        mPaint.setColor(Color.YELLOW);
+//        mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
+//        int width = getWidth();
+//        int height = getHeight();
+//        float radius = width / 4;
+//        canvas.drawCircle(width / 2, height / 2, radius, mPaint);
+//        mPaint.setColor(Color.BLUE);
+//        rectF.set(width / 2 - radius, height / 2 - radius, width / 2 + radius, height / 2 + radius);
+//        canvas.drawArc(rectF, startAng, endAng, true, mPaint);
+//
+//        rectF.set(width / 2 - radius, height / 2 - radius, width / 2 + radius, height / 2 + radius);
+//
+//        mPaint.setColor(Color.parseColor("#89ffb6cf"));
+//        canvas.drawRect(rectF, mPaint);
+//        float[] pts = new float[]{1.1f, 20.2f, 30.3f};
+//
+//        mPaint.setColor(Color.BLACK);
+//        canvas.drawLines(pts, mPaint);
         mPaint.setStyle(Paint.Style.FILL_AND_STROKE);
-        int width = getWidth();
-        int height = getHeight();
-        float radius = width / 4;
-        canvas.drawCircle(width / 2, height / 2, radius, mPaint);
-        mPaint.setColor(Color.BLUE);
-        rectF.set(width / 2-radius, height/2-radius, width/2+radius, height/2+radius);
-        canvas.drawArc(rectF, startAng, endAng, true, mPaint);
+        mPaint.setColor(backgroundColor);
+        canvas.drawCircle(centerX,centerY,radius,mPaint);
 
-        rectF.set(width / 2-radius, height/2-radius, width/2+radius, height/2+radius);
 
-        mPaint.setColor(Color.parseColor("#89ffb6cf"));
-        canvas.drawRect(rectF,mPaint);
-        float[] pts=new float[]{1.1f,20.2f,30.3f};
+        mPaint.setColor(progressColor);
+        double percent = progress * 1.0 / 100;
+        int angle = (int) (percent * 360);
+        canvas.drawArc(rectF,270,angle,true,mPaint);
 
-        mPaint.setColor(Color.BLACK);
-        canvas.drawLines(pts,mPaint);
 
     }
 
@@ -126,9 +168,9 @@ public class MyView extends View {
     private int endAng;
 
 
-    public void setDate(int startAng,int endAng){
-        this.startAng=startAng;
-        this.endAng=endAng;
+    public void setDate(int startAng, int endAng) {
+        this.startAng = startAng;
+        this.endAng = endAng;
 
     }
 }
