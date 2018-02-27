@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.riti.testview.MainActivity">
+
+    <com.riti.testview.MyView
+        android:id="@+id/my_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:percent_background_color="@color/colorAccent"
+        app:percent_circle_gravity="center"
+        app:percent_circle_progress="30"
+        app:percent_circle_radius="50dp"
+        app:percent_progress_color="@color/colorPrimary" />
+
+
+</android.support.constraint.ConstraintLayout>
