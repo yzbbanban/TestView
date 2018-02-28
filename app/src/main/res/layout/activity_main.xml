@@ -6,20 +6,21 @@
     android:layout_height="match_parent"
     tools:context="com.riti.testview.MainActivity">
 
-    <com.riti.testview.MyView
-        android:id="@+id/my_view"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
-        android:layout_margin="10dp"
-        android:background="@color/red"
-        android:padding="10dp"
-        app:percent_background_color="@color/colorAccent"
-        app:percent_circle_gravity="right"
-        app:percent_circle_progress="70"
-        app:percent_circle_radius="50dp"
-        app:percent_progress_color="@color/colorPrimary" />
+    <!--<com.riti.testview.MyView-->
+        <!--android:id="@+id/my_view"-->
+        <!--android:layout_width="200dp"-->
+        <!--android:layout_height="200dp"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:background="@color/red"-->
+        <!--android:padding="10dp"-->
+        <!--app:percent_background_color="@color/colorAccent"-->
+        <!--app:percent_circle_gravity="right"-->
+        <!--app:percent_circle_progress="70"-->
+        <!--app:percent_circle_radius="50dp"-->
+        <!--app:percent_progress_color="@color/colorPrimary" />-->
 
     <com.riti.testview.WareView
+        android:id="@+id/wv"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 </android.support.constraint.ConstraintLayout>
