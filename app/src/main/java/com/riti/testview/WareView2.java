@@ -8,11 +8,8 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
-import android.os.Build;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
@@ -20,32 +17,30 @@ import android.view.animation.LinearInterpolator;
  * Created by YZBbanban on 2018/2/28.
  */
 
-public class WareView extends View {
+public class WareView2 extends View {
     private Paint mPaint;
     private Path mPath;
     private float offset;//偏移量
-    private float baseLine;//基线
 
-
-    public WareView(Context context) {
+    public WareView2(Context context) {
         super(context);
         init();
     }
 
-    public WareView(Context context, @Nullable AttributeSet attrs) {
+    public WareView2(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public WareView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public WareView2(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     private void init() {
         mPaint = new Paint();
-        mPaint.setAntiAlias(true);
-        mPaint.setDither(true);
+        mPaint.setAntiAlias(true);//防锯齿
+        mPaint.setDither(true);//防抖动
         mPath = new Path();
 
     }
@@ -53,8 +48,6 @@ public class WareView extends View {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-        baseLine = MeasureSpec.getSize(heightMeasureSpec) / 2 + 150;
-        Log.i(TAG, "onMeasure---->: " + baseLine);
     }
 
     @Override
@@ -63,10 +56,10 @@ public class WareView extends View {
         xController();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+
         float radius = 150.0f;
 //        Log.i(TAG, "onDraw: "+getWidth());
         mPaint.setColor(Color.YELLOW);
@@ -74,51 +67,44 @@ public class WareView extends View {
         int layerId = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);//创建透明图层
         canvas.drawCircle(getWidth() / 2, getHeight() / 2, radius, mPaint);
 
-        mPaint.setColor(Color.YELLOW);
+
+        //画笔颜色
+        mPaint.setColor(Color.RED);
+        //改变模式为填充 fill
         mPaint.setStyle(Paint.Style.FILL);
+        //设置图层叠加样式
         mPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
+        //初始化，不然会重复绘制
         mPath.reset();
-        mPath.moveTo(-getWidth() + offset, baseLine);
+        //移动到左边屏幕中间
+        mPath.moveTo(0.0f , getHeight()/2);
+        //贝斯阿尔曲线
+        mPath.quadTo(-7 * getWidth() / 8 + offset, getHeight()/2 - 100, -3*getWidth() / 4 + offset, getHeight()/2);
+        mPath.quadTo(-5 * getWidth() / 8 + offset, getHeight()/2 + 100, -getWidth()/2+offset, getHeight()/2);
+        mPath.quadTo(-3 * getWidth() / 8 + offset, getHeight()/2 - 100, -getWidth() / 4 + offset, getHeight()/2);
+        mPath.quadTo(-1 * getWidth() / 8 + offset, getHeight()/2 + 100, offset, getHeight()/2);
 
-        //曲线密集度，8个周期 可自行添加或用属性设置，这里不做演示，有要求可留言
-        int wareStep = 8;
-        for (int i = 0; i < wareStep; i++) {
-            float base = baseLine;
-            if (i % 2 == 0) {
-                base = base + 30f;
-            } else {
-                base = base - 30f;
-            }
-            mPath.quadTo(
-                    (2 * i - wareStep + 1) * getWidth() / wareStep + offset,
-                    base,
-                    2 * (i - 3) * getWidth() / wareStep + offset,
-                    baseLine);
-        }
+        mPath.quadTo(1 * getWidth() / 8 + offset, getHeight()/2 - 100, getWidth() / 4 + offset, getHeight()/2);
+        mPath.quadTo(3 * getWidth() / 8 + offset, getHeight()/2 + 100, getWidth()/2 + offset, getHeight()/2);
+        mPath.quadTo(5 * getWidth() / 8 + offset, getHeight()/2 - 100, 3*getWidth() / 4 + offset, getHeight()/2);
+        mPath.quadTo(7 * getWidth() / 8 + offset, getHeight()/2 + 100, getWidth() + offset, getHeight()/2);
+        //贝塞尔曲线中点为屏幕右端竖直方向的中点，所以选取屏幕上方作为一条线的中点
+        mPath.lineTo(getWidth(),0);
+        //在移动到屏幕起始点，形成闭区间
+        mPath.lineTo(0,0);
 
-//        mPath.quadTo(-7 * getWidth() / 8 + offset, baseLine - 30, -3*getWidth() / 4 + offset, baseLine);
-//        mPath.quadTo(-5 * getWidth() / 8 + offset, baseLine + 30, -getWidth()/2+offset, baseLine);
-//        mPath.quadTo(-3 * getWidth() / 8 + offset, baseLine - 30, -getWidth() / 4 + offset, baseLine);
-//        mPath.quadTo(-1 * getWidth() / 8 + offset, baseLine + 30, offset, baseLine);
-//
-//        mPath.quadTo(1 * getWidth() / 8 + offset, baseLine - 30, getWidth() / 4 + offset, baseLine);
-//        mPath.quadTo(3 * getWidth() / 8 + offset, baseLine + 30, getWidth()/2 + offset, baseLine);
-//        mPath.quadTo(5 * getWidth() / 8 + offset, baseLine - 30, 3*getWidth() / 4 + offset, baseLine);
-//        mPath.quadTo(7 * getWidth() / 8 + offset, baseLine + 30, getWidth() + offset, baseLine);
-
-        mPath.lineTo(getWidth(), 0.0f);
-        mPath.lineTo(-getWidth() + offset, 0.0f);
-        mPath.close();
-
-
-        canvas.drawPath(mPath, mPaint);
-
+        //在画布上绘制
+        canvas.drawPath(mPath,mPaint);
+        //取消样式
         mPaint.setXfermode(null);
+        //在 onDraw 之前保存画笔等的状态，便于下次直接使用画笔等工具
         canvas.restoreToCount(layerId);
 
+        //绘制边界
         mPaint.setColor(Color.BLACK);
         mPaint.setStyle(Paint.Style.STROKE);
         canvas.drawCircle(getWidth() / 2, getHeight() / 2, radius, mPaint);
+
     }
 
     private void xController() {
@@ -129,7 +115,6 @@ public class WareView extends View {
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
                 float animatorValue = (float) valueAnimator.getAnimatedValue();
                 offset = animatorValue;//不断的设置偏移量，并重画
-//                baseLine =animatorValue;//不断的设置偏移量，并重画
                 postInvalidate();
 
             }
@@ -139,17 +124,5 @@ public class WareView extends View {
         mAnimator.start();
     }
 
-    private static final String TAG = "WareView";
 
-    public void setProcess(int process) {
-        Log.i(TAG, "setProcess: " + process);
-        //[-150,150]
-        float step = process * 3f;
-
-        float pro = getHeight() / 2 + (150f - step);
-        Log.i(TAG, "setProcess getWidth: " + getWidth());
-        Log.i(TAG, "pro: " + pro);
-
-        this.baseLine = pro;
-    }
 }
