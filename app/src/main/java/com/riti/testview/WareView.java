@@ -17,8 +17,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
 
-import static android.graphics.Path.Op.INTERSECT;
-
 /**
  * Created by YZBbanban on 2018/2/28.
  */
@@ -83,6 +81,7 @@ public class WareView extends View {
         mPath.reset();
         mPath.moveTo(-getWidth() + offset, baseLine);
 
+        //曲线密集度，8个周期 可自行添加或用属性设置，这里不做演示，有要求可留言
         int wareStep = 8;
         for (int i = 0; i < wareStep; i++) {
             float base = baseLine;
