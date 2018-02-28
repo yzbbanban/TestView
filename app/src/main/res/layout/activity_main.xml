@@ -19,5 +19,7 @@
         app:percent_circle_radius="50dp"
         app:percent_progress_color="@color/colorPrimary" />
 
-
+    <com.riti.testview.WareView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 </android.support.constraint.ConstraintLayout>
