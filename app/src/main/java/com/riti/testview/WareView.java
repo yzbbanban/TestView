@@ -74,7 +74,7 @@ public class WareView extends View {
 //        Log.i(TAG, "onDraw: "+getWidth());
         mPaint.setColor(Color.YELLOW);
         mPaint.setStyle(Paint.Style.FILL);
-        int layerId = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);
+        int layerId = canvas.saveLayer(0, 0, getWidth(), getHeight(), null, Canvas.ALL_SAVE_FLAG);//创建透明图层
         canvas.drawCircle(getWidth() / 2, getHeight() / 2, radius, mPaint);
 
         mPaint.setColor(Color.YELLOW);
